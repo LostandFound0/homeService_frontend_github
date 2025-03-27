@@ -1,23 +1,32 @@
-import { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Homepage from './components/Homepage';
-import Signup from './components/Signup';
-import Login from './components/Login';
-import ForgotPassword from './components/Forgotpassword';
-import UpdatePassword from './components/Updatepassword';
-
+import { lazy,Suspense } from 'react'
+import {BrowserRouter as Router,Routes,Route} from 'react-router-dom'
+import Landing from './components/auth/Landing'
+import Signup from './components/auth/Signup'
+import Login from './components/auth/Login'
+import Forgotpassword from './components/auth/Forgotpassword'
+import Updatepassword from './components/auth/Updatepassword'
+import Homepage from './components/userpages/Homepage'
+import Profile from './components/userpages/Profile'
+import GetSubDetails from './components/userpages/GetSubDetails'
+import Workerorder from './components/workerpages/Workerorder'
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Homepage />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/update-password" element={<UpdatePassword />} />
-      </Routes>
-    </Router>
-  );
+    <>
+        <Router>
+          <Routes>
+            <Route exact path="/" element={<Landing/>}/>
+            <Route exact path="/signup" element={<Signup/>}/>
+            <Route exact path="/login" element={<Login/>}/>
+            <Route exact path="/forgotpassword" element={<Forgotpassword/>}/>
+            <Route exact path="/upassword/:token" element={<Updatepassword/>}/>
+            <Route exact path="/home" element={<Homepage/>}/>
+            <Route exact path="/profile" element={<Profile/>}/>
+            <Route exact path="/getallSub" element={<GetSubDetails/>}/>
+            <Route exact path="/worker" element={<Workerorder/>}/>
+          </Routes>
+        </Router>
+    </>
+  )
 }
 
-export default App;
+export default App

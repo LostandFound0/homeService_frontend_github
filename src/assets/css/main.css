@@ -1,0 +1,501 @@
+@import url('https://fonts.googleapis.com/css2?family=Edu+AU+VIC+WA+NT+Hand:wght@400..700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+}
+
+body {
+    background-color: white;
+    width: 100%;
+    font-family: "Edu AU VIC WA NT Hand", cursive;
+    font-optical-sizing: auto;
+}
+
+.firstSection {
+    width: 100%;
+    height: auto;
+}
+
+.navsection {
+    width: 100%;
+}
+
+.navsection nav {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px;
+}
+
+.navsection nav h1 {
+    font-size: x-large;
+}
+
+.navsection nav ul {
+    display: flex;
+    gap: 40px;
+    list-style-type: none;
+}
+
+.navsection nav ul li a {
+    color: black;
+    font-size: larger;
+    font-weight: 500px;
+    text-decoration: none;
+    transition: 0.5s;
+}
+
+.navsection nav ul li {
+    position: relative;
+}
+
+.navsection nav ul li::before {
+    content: " ";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 2px;
+    background-color: black;
+    transform-origin: top left;
+    transform: scaleX(0);
+    transition: 0.5s ease-in-out;
+}
+
+
+.navsection nav ul li::after {
+    content: " ";
+    position: absolute;
+    left: 0;
+    top: 35px;
+    width: 100%;
+    height: 2px;
+    background-color: black;
+    transform-origin: bottom right;
+    transform: scaleX(0);
+    transition: 0.5s ease-in-out;
+}
+
+.navsection nav ul li:hover::before,
+.navsection nav ul li:hover::after {
+    transform: scaleY(1);
+    letter-spacing: 1;
+}
+
+.navsection nav ul li a:hover {
+    font-weight: 600;
+}
+
+.navsection nav .bars {
+    font-size: x-large;
+    display: none;
+}
+
+.mainContent {
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px;
+    margin-top: 50px;
+}
+
+.mainContent .content>* {
+    margin-bottom: 25px;
+}
+
+.mainContent .content {
+    margin-left: 220px;
+}
+
+.mainContent .content h1 {
+    font-size: 45px;
+}
+
+.mainContent .content p {
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.srvcbtn {
+    width: 20%;
+    height: 35px;
+    font-family: "Edu AU VIC WA NT Hand", cursive;
+    font-optical-sizing: auto;
+    font-size: large;
+    font-weight: bold;
+    background-color: rgb(19, 19, 19);
+    color: white;
+    border: none;
+    transition: 0.5s;
+    cursor: pointer;
+}
+
+.srvcbtn:hover {
+    background-color: white;
+    color: black;
+    letter-spacing: 1px;
+    border: 1px solid black;
+}
+
+.mainContent .mainImage img {
+    width: 100%;
+}
+
+.aboutus {
+    width: 100%;
+    height: auto;
+    margin-top: 150px;
+    padding: 25px;
+}
+
+.aboutcontent {
+    width: 100%;
+    height: auto;
+}
+
+.aboutusallContent {
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.aboutusallContent .aboutImage img {
+    width: 100%;
+}
+
+.aboutcontents {
+    width: 70%;
+}
+
+.aboutcontents h1 {
+    font-size: 45px;
+    text-align: left;
+    margin-bottom: 25px;
+}
+
+.aboutcontents p {
+    width: 100%;
+    font-weight: 500;
+    text-align: left;
+}
+
+.servicesSection {
+    width: 100%;
+    height: auto;
+    margin-top: 150px;
+    padding: 0px;
+}
+
+.servicesSection .serviceContent {
+    width: 100%;
+    height: auto;
+}
+
+.servicesSection .serviceContent h1 {
+    font-size: 45px;
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.servicesSection .serviceContent .serviceCards {
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: space-around;
+}
+
+.servicesSection .serviceContent .serviceCards .card {
+    border: 2px solid black;
+    width: 30%;
+}
+
+.servicesSection .serviceContent .serviceCards .card .cardcontent {
+    padding: 10px;
+}
+
+.servicesSection .serviceContent .serviceCards .card .cardcontent p {
+    width: 100%;
+}
+
+.servicesSection .serviceContent .serviceCards .card img {
+    width: 50%;
+    padding: 30px;
+}
+
+.career {
+    width: 100%;
+    border: 2px solid black;
+    height: 90vh;
+    text-align: center;
+    margin-top: 110px;
+}
+
+.contactus {
+    width: 100%;
+    border: 2px solid black;
+    height: auto;
+    padding: 35px;
+    margin-top: 110px;
+}
+
+.contactus .contactDetails {
+    width: 100%;
+    height: auto;
+}
+
+.contactus .contactDetails .contactform {
+    width: 100%;
+    height: auto;
+    border: 2px solid black;
+    display: flex;
+    justify-content: space-around;
+}
+
+.contactus .contactDetails .contactform .contactformDetails {
+    background-color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
+    width: 50%;
+}
+
+.formConcepts {
+    width: 100%;
+    border: 5px solid black;
+    min-height: 100vh;
+    position: relative;
+}
+
+.formBox {
+    width: 30%;
+    border: 2px solid black;
+    height: auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.formBox form {
+    width: 100%;
+    height: auto;
+    padding: 35px;
+    position: relative;
+    
+}
+
+.formBox form h1 {
+    margin-bottom: 15px;
+}
+
+.inputDetails {
+    position: relative;
+}
+
+.inputDetails input {
+    height: 40px;
+    width: 100%;
+    margin-bottom: 15px;
+    outline: none;
+    border: 2px solid rgb(7, 7, 7);
+}
+
+.inputDetails input:focus {
+    border: 2px solid rgb(7, 7, 7);
+}
+
+.inputDetails label {
+    position: absolute;
+    top: 40%;
+    left: 20%;
+    font-size: 15px;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    transition: 0.5s ease-in-out;
+}
+
+.inputDetails input:focus~label,
+.inputDetails input:valid~label {
+    top: 0;
+    left: 20%;
+    background-color: white;
+}
+
+.otherlinks {
+    margin-top: 25px;
+}
+
+.formBox .otherlinks span a {
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+}
+
+@media screen and (max-width:934px) {
+    .navsection nav {
+        background-color: black;
+        color: white;
+        position: relative;
+    }
+
+    .navsection nav ul {
+        width: 100%;
+        padding: 10px;
+        align-items: center;
+        background-color: black;
+        position: absolute;
+        top: 63px;
+        flex-direction: column;
+        gap: 5px;
+        list-style-type: none;
+        display: none;
+        transition: 0.5s;
+    }
+
+    .navsection nav .navOpen {
+        display: flex;
+    }
+
+    .navsection nav ul li a {
+        color: white;
+    }
+
+    .navsection nav .bars {
+        font-size: x-large;
+        display: block;
+    }
+
+    .mainContent {
+        flex-direction: column;
+        padding: 0;
+    }
+
+    .mainContent .content {
+        margin-left: 0;
+        text-align: center;
+    }
+
+    .aboutus {
+        padding: 35px;
+    }
+
+    .aboutusallContent {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .aboutcontents {
+        width: 100%;
+    }
+
+    .aboutcontents h1,
+    p {
+        text-align: center;
+    }
+
+    .servicesSection {
+        padding: 20px;
+    }
+
+    .servicesSection .serviceContent .serviceCards {
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 10px;
+        justify-content: space-around;
+        overflow-x: auto;
+    }
+
+    .servicesSection .serviceContent .serviceCards .card {
+        border: 2px solid black;
+        min-width: 100%;
+    }
+
+    .formBox {
+        width: 100%;
+        border: 2px solid black;
+        height: auto;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .formBox form {
+        width: 100%;
+        height: auto;
+        padding: 30px;
+        margin-left: 0;
+    }
+
+    .inputDetails input {
+        height: 40px;
+        width: 100%;
+        margin-bottom: 5px;
+        outline: none;
+        border: 2px solid black;
+    }
+
+    .inputDetails label {
+        top: 50%;
+        left: 20%;
+        transform: translate(-50%, -50%);
+        transition: 0.5s ease-in-out;
+    }
+
+    .inputDetails input {
+        height: 40px;
+        width: 100%;
+        margin-top: 15px;
+        outline: none;
+        margin-bottom: 15px;
+    }
+
+    .Signupbtns {
+        margin-top: 15px;
+    }
+
+    .inputDetails input:focus~label,
+    .inputDetails input:valid~label {
+        top:10px;
+        left:80px;
+        background-color: white;
+        color: black;
+        font-weight: bold;
+    }
+}
+
+.spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40px; /* Adjust as needed */
+}
+
+.spinner p {
+    font-weight: bold;
+    color: black;
+}
+
+/* Optional: Add spinner animation */
+.spinner::after {
+    content: "";
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    border-top: 4px solid black;
+    width: 24px;
+    height: 24px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
