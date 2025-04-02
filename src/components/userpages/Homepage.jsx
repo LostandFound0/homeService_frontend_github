@@ -55,11 +55,11 @@ export default function Homepage() {
                         <div className={toogle === 2 ? "bars activetabs" : "bars"} onClick={() => { toogleBtn(2) }}>
                             <FaServicestack /> Service
                         </div>
-                        {usertype == 0 && (
+                        {/* {usertype == 0 && (
                         <div className={toogle === 5 ? "bars activetabs" : "bars"} onClick={() => { toogleBtn(5) }}>
                                     <MdOutlineSubscriptions /> Subscription
                                 </div>
-                        )}
+                        )} */}
                                 <div className={toogle === 6 ? "bars activetabs" : "bars"} onClick={() => { toogleBtn(6) }}>
                                     <IoSettingsOutline /> Settings
                                 </div>

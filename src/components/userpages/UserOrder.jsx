@@ -37,31 +37,46 @@ function UserOrder() {
     paymentPostalcode: '',
   });
 
+  const [getpaymentstatus, setpaymentstatus] = useState([]);
+  const [showReviewModal, setShowReviewModal] = useState(false);
+  const [reviewPost, setReview] = useState({
+    order_ID: '',
+    points: '',
+    comment: ''
+  });
+
   const navigate = useNavigate();
 
   const fetchOrders = async () => {
     try {
       const token = localStorage.getItem('token');
       if (!token) throw new Error('No token found in local storage');
-
       const response = await axios.get('http://localhost:6060/userorders', {
         headers: { Authorization: `Bearer ${token}` },
       });
+      const newOrders = response.data.orders;
+      const newUsers = response.data.users;
+      const newServices = response.data.services;
 
-      setOrders(response.data.orders);
-      setUsesr(response.data.users);
-      setService(response.data.services);
-      const userMap = response.data.users.reduce((acc, user) => {
-        acc[user.id] = user.firstname;
-        return acc;
-      }, {});
-      setUserMap(userMap);
-
-      const serviceMap = response.data.services.reduce((acc, service) => {
-        acc[service.id] = service.serviceName;
-        return acc;
-      }, {});
-      setServiceMap(serviceMap);
+      if (JSON.stringify(newOrders) !== JSON.stringify(orders)) {
+        setOrders(newOrders);
+      }
+      if (JSON.stringify(newUsers) !== JSON.stringify(usersss)) {
+        setUsesr(newUsers);
+        const updatedUserMap = newUsers.reduce((acc, user) => {
+          acc[user.id] = user.firstname;
+          return acc;
+        }, {});
+        setUserMap(updatedUserMap);
+      }
+      if (JSON.stringify(newServices) !== JSON.stringify(service)) {
+        setService(newServices);
+        const updatedServiceMap = newServices.reduce((acc, service) => {
+          acc[service.id] = service.serviceName;
+          return acc;
+        }, {});
+        setServiceMap(updatedServiceMap);
+      }
     } catch (error) {
       if (error.response && error.response.status === 403) {
         alert('Token expired, please log in again.');
@@ -75,24 +90,41 @@ function UserOrder() {
 
   const fetchMessages = async () => {
     if (!orderIds) return;
-    setLoading(true);
     try {
       const token = localStorage.getItem('token');
       const response = await axios.get(`http://localhost:6060/getmessages/${orderIds}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      if (response.status === 200) {
-        setMessages(response.data.data);
-        const userMap = response.data.User.reduce((acc, user) => {
+      const newMessages = response.data.data;
+      if (JSON.stringify(newMessages) !== JSON.stringify(messages)) {
+        setMessages(newMessages);
+        const updatedUserMap = response.data.User.reduce((acc, user) => {
           acc[user.id] = user.firstname;
           return acc;
         }, {});
-        setUserMap(userMap);
+        setUserMap(updatedUserMap);
       }
     } catch (err) {
       setError('Failed to fetch messages.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const getFunction = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const res = await axios.get('http://localhost:6060/getpaymentorder', {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      const newPayments = res.data.data;
+      if (JSON.stringify(newPayments) !== JSON.stringify(getpaymentstatus)) {
+        setpaymentstatus(newPayments);
+      }
+    } catch (error) {
+      alert(`Payment error ${error}`);
     }
   };
 
@@ -148,6 +180,11 @@ function UserOrder() {
     setShowChatModal(true);
   };
 
+  const onClickModal = (ord) => {
+    setPaymentData(prevData => ({ ...prevData, orderID: ord.id }));
+    setPaymentModal(true);
+  };
+
   const onSubmitPayment = async (e) => {
     e.preventDefault();
     try {
@@ -164,76 +201,56 @@ function UserOrder() {
     }
   };
 
-  const onClickModal = (ord) => {
-    setPaymentData(prevData => ({ ...prevData, orderID: ord.id }));
-    setPaymentModal(true);
-  };
-
   const submitPaymentHandler = (e) => {
     const { name, value } = e.target;
     setPaymentData(prevData => ({ ...prevData, [name]: value }));
   };
 
-  const [getpaymentstatus, setpaymentstatus] = useState([])
-  const getFunction = async () => {
-    try {
-      const token = localStorage.getItem('token')
-      const res = await axios.get('http://localhost:6060/getpaymentorder', {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-      setpaymentstatus(res.data.data)
-    } catch (error) {
-      alert(`Payment error ${error}`);
-    }
-  }
-  const [showReviewModal, setShowReviewModal] = useState(false);
-  const [reviewPost, setReview] = useState({
-    order_ID: '',
-    points: '',
-    comment: ''
-  })
-
   const onChangeReviewHandler = (e) => {
     const { name, value } = e.target;
-    setReview({ ...reviewPost, [name]: value })
-  }
+    setReview({ ...reviewPost, [name]: value });
+  };
 
   const reviewHandle = (order) => {
     setReview({
-      order_ID:order.id,
-      points:'',
-      comment:''
-    })
-    setShowReviewModal(!showReviewModal)
-  }
+      order_ID: order.id,
+      points: '',
+      comment: ''
+    });
+    setShowReviewModal(!showReviewModal);
+  };
 
   const sendReview = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
-      const token = localStorage.getItem('token')
+      const token = localStorage.getItem('token');
       const resp = await axios.post('http://localhost:6060/reviewpost', reviewPost, {
         headers: {
           Authorization: `Bearer ${token}`
         }
-      })
+      });
       if (resp.status === 200) {
-        alert("Review Success")
-        setShowReviewModal(false)
+        alert("Review Success");
+        setShowReviewModal(false);
       }
     } catch (error) {
       alert(`Review Order error ${error}`);
     }
-  }
-  
+  };
+
   useEffect(() => {
-    fetchOrders();
-    getFunction();
+    const ordersInterval = setInterval(fetchOrders, 1000);
+    const paymentsInterval = setInterval(getFunction, 1000);
+    return () => {
+      clearInterval(ordersInterval);
+      clearInterval(paymentsInterval);
+    };
   }, []);
 
   useEffect(() => {
-    fetchMessages();
+    if (!orderIds) return;
+    const messageInterval = setInterval(fetchMessages, 1000);
+    return () => clearInterval(messageInterval);
   }, [orderIds]);
 
   return (
@@ -255,7 +272,6 @@ function UserOrder() {
                         order.status === 1 ? "Green" :
                           order.status === 2 ? "Red" :
                             order.status === 3 ? "#00008B" : "#123456"
-
                     }}>
                       Status: {order.status === 0 ? "Pending" :
                         order.status === 1 ? "Accepted" :
@@ -263,40 +279,21 @@ function UserOrder() {
                             order.status === 3 ? "Completed" : "Unknown"}
                     </strong>
                   </Card.Subtitle>
-                  {/* <Card.Text>
-                    <strong>Service Message:</strong> {order.servicemessage}
-                  </Card.Text> */}
-                  {usersss.map(rr => (
-                    <Card.Text>
-                      <strong>Worker Name:</strong> {rr.firstname}
-                    </Card.Text>
-                  ))}
+                  <Card.Text>
+                    <strong>Worker Name:</strong> {userMap[order.orderuser_id] || "Unknown"}
+                  </Card.Text>
                   <Card.Text>
                     <strong>Service Name:</strong> {serviceMap[order.service_id] || "Unknown"}
                   </Card.Text>
-
-
                   <Card.Text>
                     <strong>Created At:</strong> {new Date(order.createdAt).toLocaleString()}
                   </Card.Text>
-
                   <div className="d-flex justify-content-between">
                     {(order.status === 0 || order.status === 1) && (
                       <Button variant="primary" onClick={() => handleShowEditModal(order)}>Edit</Button>
                     )}
-
                     <Button variant="info" onClick={() => handleShowChatModal(order.id)}>Chat</Button>
-                    {order.status === 3 && order.paymentstatus == 0 && (
-                      <Button variant="warning" onClick={() => { onClickModal(order); setPaymentModal(true); }}>Payment Order</Button>
-                    )}
-                    {order.paymentstatus == 1 && (
-                      <>
-                        <Button variant="dark" onClick={() => alert(order.id)}>View Bill</Button>
-                        <Button variant='outline-primary' onClick={()=>reviewHandle(order)}>Review</Button>
-                      </>
-                    )}
                   </div>
-
                 </Card.Body>
               </Card>
             </div>
@@ -307,38 +304,6 @@ function UserOrder() {
           </div>
         )}
       </div>
-      {showReviewModal &&
-        <div>
-          <form onSubmit={sendReview}>
-            <input type="text" name='points' placeholder='Enter points' value={reviewPost.points} onChange={onChangeReviewHandler} />
-            <input type="text" name='comment' placeholder='Enter Comment' value={reviewPost.comment} onChange={onChangeReviewHandler} />
-            <Button variant='outline-primary' type='submit'>Review</Button>
-          </form>
-        </div>
-      }
-      <Modal show={showEditModal} onHide={() => setShowEditModal(false)} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>Edit Order</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form onSubmit={onUpdateOrder}>
-            <Form.Group controlId="formOrderStatus">
-              <Form.Label>Status</Form.Label>
-              <Form.Control as="select" name="status" value={orderStatus.status} onChange={(e) => setOrderStatus({ ...orderStatus, status: e.target.value })}>
-                {/* <option value="0">Pending</option> */}
-                {/* <option value="1">Accepted</option> */}
-                <option value="2">Cancelled</option>
-                {/* <option value="3">Completed</option> */}
-              </Form.Control>
-            </Form.Group>
-            {/* <Form.Group controlId="formServiceMessage">
-              <Form.Label>Service Message</Form.Label>
-              <Form.Control type="text" name="servicemessage" value={orderStatus.servicemessage} onChange={(e) => setOrderStatus({ ...orderStatus, servicemessage: e.target.value })} />
-            </Form.Group> */}
-            <Button variant="primary" type="submit">Update</Button>
-          </Form>
-        </Modal.Body>
-      </Modal>
 
       <Modal show={showChatModal} onHide={() => setShowChatModal(false)} size="lg" centered>
         <Modal.Header closeButton>
@@ -359,7 +324,7 @@ function UserOrder() {
                     <li key={message.id} className="media mb-3">
                       <img src="https://via.placeholder.com/50" className="mr-3 rounded-circle" alt="User Avatar" />
                       <div className="media-body">
-                        <h6 className="mt-0 mb-1"><strong>{userMap[message.userID] || "Unknown"}</strong>: {message.message}</h6>
+                        <h6 className="mt-0 mb-1"><strong>{userMap[message.userID] || "Unknown"}:</strong> {message.message}</h6>
                         <small className="text-muted">{new Date(message.createdAt).toLocaleString()}</small>
                       </div>
                     </li>
@@ -384,53 +349,6 @@ function UserOrder() {
             <Button variant="primary" type="submit" className="ml-2">Send</Button>
           </Form>
         </Modal.Footer>
-      </Modal>
-
-      <Modal show={paymentModal} onHide={() => setPaymentModal(false)} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>Payment Details</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form onSubmit={onSubmitPayment}>
-            <Form.Group controlId="formCardName">
-              <Form.Label>Card Name</Form.Label>
-              <Form.Control type="text" name="cardName" value={paymentData.cardName} placeholder="Enter card name" onChange={submitPaymentHandler} />
-            </Form.Group>
-            <Form.Group controlId="formCardNumber">
-              <Form.Label>Card Number</Form.Label>
-              <Form.Control type="text" name="cardNumber" value={paymentData.cardNumber} placeholder="Enter card number" onChange={submitPaymentHandler} />
-            </Form.Group>
-            <Form.Group controlId="formExpMonth">
-              <Form.Label>Expiration Month</Form.Label>
-              <Form.Control type="text" name="expMonth" value={paymentData.expMonth} placeholder="Enter expiration month" onChange={submitPaymentHandler} />
-            </Form.Group>
-            <Form.Group controlId="formExpYear">
-              <Form.Label>Expiration Year</Form.Label>
-              <Form.Control type="text" name="expYear" value={paymentData.expYear} placeholder="Enter expiration year" onChange={submitPaymentHandler} />
-            </Form.Group>
-            <Form.Group controlId="formPaymentAmount">
-              <Form.Label>Payment Amount</Form.Label>
-              <Form.Control type="text" name="paymentAmount" value={paymentData.paymentAmount} placeholder="Enter payment amount" onChange={submitPaymentHandler} />
-            </Form.Group>
-            <Form.Group controlId="formPaymentAddress">
-              <Form.Label>Address</Form.Label>
-              <Form.Control type="text" name="paymentAddress" value={paymentData.paymentAddress} placeholder="Enter address" onChange={submitPaymentHandler} />
-            </Form.Group>
-            <Form.Group controlId="formPaymentCity">
-              <Form.Label>City</Form.Label>
-              <Form.Control type="text" name="paymentCity" value={paymentData.paymentCity} placeholder="Enter city" onChange={submitPaymentHandler} />
-            </Form.Group>
-            <Form.Group controlId="formPaymentState">
-              <Form.Label>State</Form.Label>
-              <Form.Control type="text" name="paymentState" value={paymentData.paymentState} placeholder="Enter state" onChange={submitPaymentHandler} />
-            </Form.Group>
-            <Form.Group controlId="formPaymentPostalcode">
-              <Form.Label>Postal Code</Form.Label>
-              <Form.Control type="text" name="paymentPostalcode" value={paymentData.paymentPostalcode} placeholder="Enter postal code" onChange={submitPaymentHandler} />
-            </Form.Group>
-            <Button variant="primary" type="submit">Submit</Button>
-          </Form>
-        </Modal.Body>
       </Modal>
     </div>
   );

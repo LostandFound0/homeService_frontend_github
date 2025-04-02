@@ -102,9 +102,9 @@ function Signup() {
   };
 
   const handlePhoneChange = (e) => {
-    let value = e.target.value.replace(/\D/g, ''); // Remove all non-digit characters
+    let value = e.target.value.replace(/\D/g, '');
     if (value.length > 10) {
-      value = value.substring(0, 10); // Limit to 10 digits
+      value = value.substring(0, 10);
     }
     setFormData({
       ...formData,

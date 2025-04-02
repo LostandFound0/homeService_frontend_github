@@ -64,10 +64,16 @@ function UserserviceSide() {
   const handleFilterChange = () => {
     const filtered = data.filter(service => {
       const nameMatch = service.serviceName.toLowerCase().includes(filterText.toLowerCase());
-      const priceMatch = (minPrice === '' || service.minPrice >= minPrice) &&
-                          (maxPrice === '' || service.maxPrice <= maxPrice);
+      const min = parseFloat(minPrice);
+      const max = parseFloat(maxPrice);
+      const serviceMin = parseFloat(service.minPrice);
+      const serviceMax = parseFloat(service.maxPrice);
+      const priceMatch =
+        (!minPrice && !maxPrice) ||
+        (!isNaN(min) && !isNaN(max) && serviceMax >= min && serviceMin <= max) ||
+        (!isNaN(min) && isNaN(max) && serviceMax >= min) ||
+        (isNaN(min) && !isNaN(max) && serviceMin <= max);
       const locationMatch = location === '' || service.location.toLowerCase().includes(location.toLowerCase());
-
       return nameMatch && priceMatch && locationMatch;
     });
 
@@ -117,15 +123,6 @@ function UserserviceSide() {
             />
           </div>
         </div>
-        {/* <div className="mb-3">
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Search by location"
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-          />
-        </div> */}
       </div>
 
       <div className="row">
@@ -134,7 +131,6 @@ function UserserviceSide() {
             <div className="col-md-4 mb-4" key={service.id}>
               <div className="card">
                 <div className="card-body">
-                  {/* <img src="" alt="image" width="100%"/> */}
                   <h5 className="card-title">{service.serviceName}</h5>
                   <p className="card-text">
                     <strong>Minimum Price:</strong> ${service.minPrice}<br />
@@ -143,7 +139,6 @@ function UserserviceSide() {
                     <strong>About User:</strong> {service.aboutuserDescription}<br />
                     <strong>Different Services:</strong> {service.diffServices}<br />
                     <strong>Qualification:</strong> {service.qualification}<br />
-                    {/* <strong>Location:</strong> {service.location}<br /> */}
                   </p>
                   <button
                     className="btn btn-primary"

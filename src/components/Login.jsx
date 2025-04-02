@@ -65,10 +65,8 @@ function Login() {
     if (validateForm()) {
       setIsLoading(true);
       try {
-        // Simulate API call
         await new Promise(resolve => setTimeout(resolve, 1000));
         console.log('Login successful:', formData);
-        // Redirect to dashboard or home page after successful login
         navigate('/');
       } catch (error) {
         console.error('Login error:', error);

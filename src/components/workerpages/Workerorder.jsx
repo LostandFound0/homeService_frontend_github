@@ -19,6 +19,7 @@ function Workerorder() {
   const [orderId, setOrderId] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [userMap, setUserMap] = useState({});
 
   const getData = async () => {
     try {
@@ -89,6 +90,11 @@ function Workerorder() {
       });
       if (response.status === 200) {
         setMessages(response.data.data);
+        const userMap = response.data.User.reduce((acc, user) => {
+          acc[user.id] = user.firstname;
+          return acc;
+        }, {});
+        setUserMap(userMap);
       }
     } catch (err) {
       setError('Failed to fetch messages.');
@@ -98,11 +104,18 @@ function Workerorder() {
   };
 
   useEffect(() => {
-    getData();
+    const interval = setInterval(() => {
+      getData();
+    }, 2000);
+    return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
-    fetchMessages();
+    if (!orderId) return;
+    const interval = setInterval(() => {
+      fetchMessages();
+    }, 2000);
+    return () => clearInterval(interval);
   }, [orderId]);
 
   const handleEditModalShow = (order) => {
@@ -120,7 +133,6 @@ function Workerorder() {
     setModalType('chat');
   };
 
-  
   const handleViewModalShow = (order) => {
     const user = userd.find(u => u.id === order.orderuser_id);
     const addr = address.find(a => a.user_id === order.orderuser_id);
@@ -138,7 +150,7 @@ function Workerorder() {
               <Card>
                 <Card.Body>
                   <Card.Title>Order ID: {order.id}</Card.Title>
-                  <Card.Subtitle className="mb-2 text-muted">Status: 
+                  <Card.Subtitle className="mb-2 text-muted">Status:
                     <span style={{
                       color: order.status === 0 ? 'blue' :
                              order.status === 1 ? 'green' :
@@ -161,7 +173,6 @@ function Workerorder() {
           ))}
         </div>
 
-        {/* View Modal */}
         <Modal show={modalType === 'view'} onHide={() => setModalType(null)}>
           <Modal.Header closeButton>
             <Modal.Title>Order Details</Modal.Title>
@@ -186,7 +197,6 @@ function Workerorder() {
           </Modal.Footer>
         </Modal>
 
-        {/* Edit Modal */}
         <Modal show={modalType === 'edit'} onHide={() => setModalType(null)}>
           <Modal.Header closeButton>
             <Modal.Title>Edit Order</Modal.Title>
@@ -206,7 +216,6 @@ function Workerorder() {
           </Modal.Body>
         </Modal>
 
-        {/* Chat Modal */}
         <Modal show={modalType === 'chat'} onHide={() => setModalType(null)}>
           <Modal.Header closeButton>
             <Modal.Title>Chat</Modal.Title>
@@ -222,13 +231,11 @@ function Workerorder() {
                       <ul className="list-unstyled">
                         {messages.map((message) => (
                           <li key={message.id} className="media mb-3">
-                            <img
-                              src="https://via.placeholder.com/50"
-                              className="mr-3 rounded-circle"
-                              alt="User Avatar"
-                            />
+                            <img src="https://via.placeholder.com/50" className="mr-3 rounded-circle" alt="User Avatar" />
                             <div className="media-body">
-                              <h6 className="mt-0 mb-1"><strong>{message.userID}:</strong> {message.message}</h6>
+                              <h6 className="mt-0 mb-1">
+                                <strong>{userMap[message.userID] || "Unknown"}:</strong> {message.message}
+                              </h6>
                               <small className="text-muted">{new Date(message.createdAt).toLocaleString()}</small>
                             </div>
                           </li>
