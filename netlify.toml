@@ -1,6 +1,7 @@
 [build]
-  publish = "dist"  # Vite build output directory
+  publish = "/build"  # Vite build output directory
   command = "npm run build"  # The build command
+  base="/"
 
 [[redirects]]
   from = "/*"
