@@ -12,6 +12,7 @@ import UserServicepage from './UserserviceSide';
 import Workerorder from '../workerpages/Workerorder';
 import UserOrder from './UserOrder';
 import Subscription from './Subscription';
+import NLPQueryBox from '../auth/NLPQueryBox ';
 import { jwtDecode } from 'jwt-decode';
 
 export default function Homepage() {
@@ -82,9 +83,16 @@ export default function Homepage() {
                         </div>
                     </div>
                     <div className="homepageContent">
+                    {usertype == 0 && (
+  <div className={toogle === 1 ? "homeContents active-content" : "homeContents"}>
+    <h1>Hello Success</h1>
+    <NLPQueryBox />
+  </div>
+)}
+
                         {usertype == 0 && (
                             <div className={toogle === 1 ? "homeContents active-content" : "homeContents"}>
-                                <h1>Hello Success</h1>
+                                {/* <h1>Hello Success</h1> */}
                             </div>
                         )}
                         <div className={toogle === 2 ? "homeContents active-content" : "homeContents"}>

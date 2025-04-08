@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
+import NLPQueryBox from '../auth/NLPQueryBox ';
 import '../../assets/css/admin.css';
 
 function Adminpage() {
@@ -97,6 +98,12 @@ function Adminpage() {
                     <p className="card-value">{data.filter(u => u.usertype === '0').length}</p>
                     <p className="card-description">User type 0</p>
                 </div>
+            </div>
+
+            {/* ✅ NLP Smart Search Section */}
+            <div className="nlp-box-section" style={{ marginTop: "30px" }}>
+                <h2>Smart Query (NLP Powered)</h2>
+                <NLPQueryBox />
             </div>
 
             {showForm && (
