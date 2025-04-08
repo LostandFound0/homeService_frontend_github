@@ -7,83 +7,53 @@ import { Modal, Button, Form, Alert, Spinner, Card } from 'react-bootstrap';
 function UserOrder() {
   const [orders, setOrders] = useState([]);
   const [error, setError] = useState(null);
-  const [usersss, setUsesr] = useState([]);
+  const [usersss, setUsers] = useState([]);
   const [service, setService] = useState([]);
-  const [userMap, setUserMap] = useState({});
   const [serviceMap, setServiceMap] = useState({});
   const [showEditModal, setShowEditModal] = useState(false);
   const [showChatModal, setShowChatModal] = useState(false);
-  const [orderStatus, setOrderStatus] = useState({
-    id: '',
-    service_id: '',
-    status: '',
-    servicemessage: ''
-  });
+  const [orderStatus, setOrderStatus] = useState({ id: '', service_id: '', status: '', servicemessage: '' });
   const [normalMessage, setNormalMessage] = useState('');
   const [orderIds, setOrderIds] = useState(null);
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [paymentModal, setPaymentModal] = useState(false);
   const [paymentData, setPaymentData] = useState({
-    orderID: '',
-    cardName: '',
-    cardNumber: '',
-    expMonth: '',
-    expYear: '',
-    paymentAmount: '',
-    paymentAddress: '',
-    paymentCity: '',
-    paymentState: '',
-    paymentPostalcode: '',
+    orderID: '', cardName: '', cardNumber: '', expMonth: '', expYear: '', paymentAmount: '',
+    paymentAddress: '', paymentCity: '', paymentState: '', paymentPostalcode: ''
   });
-
   const [getpaymentstatus, setpaymentstatus] = useState([]);
   const [showReviewModal, setShowReviewModal] = useState(false);
-  const [reviewPost, setReview] = useState({
-    order_ID: '',
-    points: '',
-    comment: ''
-  });
+  const [reviewPost, setReview] = useState({ order_ID: '', points: '', comment: '' });
 
   const navigate = useNavigate();
 
   const fetchOrders = async () => {
     try {
       const token = localStorage.getItem('token');
-      if (!token) throw new Error('No token found in local storage');
-      const response = await axios.get('http://localhost:6060/userorders', {
+      if (!token) throw new Error('No token found');
+
+      const res = await axios.get('http://localhost:6060/userorders', {
         headers: { Authorization: `Bearer ${token}` },
       });
-      const newOrders = response.data.orders;
-      const newUsers = response.data.users;
-      const newServices = response.data.services;
 
-      if (JSON.stringify(newOrders) !== JSON.stringify(orders)) {
-        setOrders(newOrders);
-      }
-      if (JSON.stringify(newUsers) !== JSON.stringify(usersss)) {
-        setUsesr(newUsers);
-        const updatedUserMap = newUsers.reduce((acc, user) => {
-          acc[user.id] = user.firstname;
-          return acc;
-        }, {});
-        setUserMap(updatedUserMap);
-      }
-      if (JSON.stringify(newServices) !== JSON.stringify(service)) {
-        setService(newServices);
-        const updatedServiceMap = newServices.reduce((acc, service) => {
-          acc[service.id] = service.serviceName;
-          return acc;
-        }, {});
-        setServiceMap(updatedServiceMap);
-      }
-    } catch (error) {
-      if (error.response && error.response.status === 403) {
-        alert('Token expired, please log in again.');
+      setOrders(res.data.orders);
+      setUsers(res.data.users);
+      setService(res.data.services);
+
+      const serviceMapping = res.data.services.reduce((acc, srv) => {
+        acc[srv.id] = srv.serviceName;
+        return acc;
+      }, {});
+      setServiceMap(serviceMapping);
+
+    } catch (err) {
+      if (err.response && err.response.status === 403) {
+        alert('Token expired. Please log in again.');
         localStorage.removeItem('token');
         navigate('/login');
       } else {
-        setError(error.message);
+        setError(err.message);
       }
     }
   };
@@ -92,22 +62,25 @@ function UserOrder() {
     if (!orderIds) return;
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get(`http://localhost:6060/getmessages/${orderIds}`, {
-        headers: { Authorization: `Bearer ${token}` },
+      const res = await axios.get(`http://localhost:6060/getmessages/${orderIds}`, {
+        headers: { Authorization: `Bearer ${token}` }
       });
-      const newMessages = response.data.data;
-      if (JSON.stringify(newMessages) !== JSON.stringify(messages)) {
-        setMessages(newMessages);
-        const updatedUserMap = response.data.User.reduce((acc, user) => {
-          acc[user.id] = user.firstname;
+
+      if (res.status === 200) {
+        const userMap = res.data.User.reduce((acc, u) => {
+          acc[u.id] = u.firstname;
           return acc;
         }, {});
-        setUserMap(updatedUserMap);
+
+        const enrichedMessages = res.data.data.map(msg => ({
+          ...msg,
+          senderName: userMap[msg.userID] || "Unknown"
+        }));
+
+        setMessages(enrichedMessages);
       }
     } catch (err) {
       setError('Failed to fetch messages.');
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -115,14 +88,9 @@ function UserOrder() {
     try {
       const token = localStorage.getItem('token');
       const res = await axios.get('http://localhost:6060/getpaymentorder', {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
+        headers: { Authorization: `Bearer ${token}` }
       });
-      const newPayments = res.data.data;
-      if (JSON.stringify(newPayments) !== JSON.stringify(getpaymentstatus)) {
-        setpaymentstatus(newPayments);
-      }
+      setpaymentstatus(res.data.data);
     } catch (error) {
       alert(`Payment error ${error}`);
     }
@@ -132,16 +100,17 @@ function UserOrder() {
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.put(`http://localhost:6060/updateOrders/${orderStatus.id}`, orderStatus, {
-        headers: { Authorization: `Bearer ${token}` },
+      const res = await axios.put(`http://localhost:6060/updateOrders/${orderStatus.id}`, orderStatus, {
+        headers: { Authorization: `Bearer ${token}` }
       });
-      if (response.status === 200) {
-        alert('Update successful');
+
+      if (res.status === 200) {
+        alert("Update successful");
         fetchOrders();
         setShowEditModal(false);
       }
-    } catch (error) {
-      alert('Update error');
+    } catch {
+      alert("Update error");
     }
   };
 
@@ -149,17 +118,18 @@ function UserOrder() {
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.post('http://localhost:6060/messagepost', {
+      const res = await axios.post('http://localhost:6060/messagepost', {
         orderID: orderIds,
         message: normalMessage
       }, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { Authorization: `Bearer ${token}` }
       });
-      if (response.status === 200) {
+
+      if (res.status === 200) {
         setNormalMessage('');
         fetchMessages();
       }
-    } catch (error) {
+    } catch {
       alert('Failed to send message');
     }
   };
@@ -176,12 +146,13 @@ function UserOrder() {
 
   const handleShowChatModal = (orderId) => {
     setOrderIds(orderId);
-    fetchMessages();
+    setLoading(true);
+    fetchMessages().finally(() => setLoading(false));
     setShowChatModal(true);
   };
 
   const onClickModal = (ord) => {
-    setPaymentData(prevData => ({ ...prevData, orderID: ord.id }));
+    setPaymentData(prev => ({ ...prev, orderID: ord.id }));
     setPaymentModal(true);
   };
 
@@ -189,68 +160,67 @@ function UserOrder() {
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.post('http://localhost:6060/paymentorder', paymentData, {
-        headers: { Authorization: `Bearer ${token}` },
+      const res = await axios.post('http://localhost:6060/paymentorder', paymentData, {
+        headers: { Authorization: `Bearer ${token}` }
       });
-      if (response.status === 200) {
-        alert('Payment Success');
+
+      if (res.status === 200) {
+        alert("Payment Success");
         setPaymentModal(false);
       }
-    } catch (error) {
-      alert(`Payment error ${error}`);
+    } catch (err) {
+      alert(`Payment error ${err}`);
     }
   };
 
   const submitPaymentHandler = (e) => {
     const { name, value } = e.target;
-    setPaymentData(prevData => ({ ...prevData, [name]: value }));
+    setPaymentData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const reviewHandle = (order) => {
+    setReview({ order_ID: order.id, points: '', comment: '' });
+    setShowReviewModal(true);
   };
 
   const onChangeReviewHandler = (e) => {
     const { name, value } = e.target;
-    setReview({ ...reviewPost, [name]: value });
-  };
-
-  const reviewHandle = (order) => {
-    setReview({
-      order_ID: order.id,
-      points: '',
-      comment: ''
-    });
-    setShowReviewModal(!showReviewModal);
+    setReview(prev => ({ ...prev, [name]: value }));
   };
 
   const sendReview = async (e) => {
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');
-      const resp = await axios.post('http://localhost:6060/reviewpost', reviewPost, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
+      const res = await axios.post('http://localhost:6060/reviewpost', reviewPost, {
+        headers: { Authorization: `Bearer ${token}` }
       });
-      if (resp.status === 200) {
+
+      if (res.status === 200) {
         alert("Review Success");
         setShowReviewModal(false);
       }
-    } catch (error) {
-      alert(`Review Order error ${error}`);
+    } catch (err) {
+      alert(`Review Order error ${err}`);
     }
   };
 
   useEffect(() => {
-    const ordersInterval = setInterval(fetchOrders, 1000);
-    const paymentsInterval = setInterval(getFunction, 1000);
-    return () => {
-      clearInterval(ordersInterval);
-      clearInterval(paymentsInterval);
-    };
+    fetchOrders();
+    getFunction();
   }, []);
 
   useEffect(() => {
-    if (!orderIds) return;
-    const messageInterval = setInterval(fetchMessages, 1000);
-    return () => clearInterval(messageInterval);
+    if (orderIds) fetchMessages();
+  }, [orderIds]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      fetchOrders();
+      getFunction();
+      if (orderIds) fetchMessages();
+    }, 2000);
+    return () => clearInterval(interval);
   }, [orderIds]);
 
   return (
@@ -258,97 +228,111 @@ function UserOrder() {
       <h1 className="mb-4">User Orders</h1>
       {error && <Alert variant="danger">{error}</Alert>}
       <div className="row">
-        {orders.length > 0 ? (
-          orders.map(order => (
-            <div className="col-md-4 mb-3" key={order.id}>
-              <Card key={order.id}>
-                <Card.Body key={order.id}>
-                  <Card.Title>
-                    Order ID: {order.id}
-                  </Card.Title>
-                  <Card.Subtitle className="mb-2 text-muted">
-                    <strong style={{
-                      color: order.status === 0 ? "#39f" :
-                        order.status === 1 ? "Green" :
-                          order.status === 2 ? "Red" :
-                            order.status === 3 ? "#00008B" : "#123456"
-                    }}>
-                      Status: {order.status === 0 ? "Pending" :
-                        order.status === 1 ? "Accepted" :
-                          order.status === 2 ? "Cancelled" :
-                            order.status === 3 ? "Completed" : "Unknown"}
-                    </strong>
-                  </Card.Subtitle>
-                  <Card.Text>
-                    <strong>Worker Name:</strong> {userMap[order.orderuser_id] || "Unknown"}
-                  </Card.Text>
-                  <Card.Text>
-                    <strong>Service Name:</strong> {serviceMap[order.service_id] || "Unknown"}
-                  </Card.Text>
-                  <Card.Text>
-                    <strong>Created At:</strong> {new Date(order.createdAt).toLocaleString()}
-                  </Card.Text>
-                  <div className="d-flex justify-content-between">
-                    {(order.status === 0 || order.status === 1) && (
-                      <Button variant="primary" onClick={() => handleShowEditModal(order)}>Edit</Button>
-                    )}
-                    <Button variant="info" onClick={() => handleShowChatModal(order.id)}>Chat</Button>
-                  </div>
-                </Card.Body>
-              </Card>
-            </div>
-          ))
-        ) : (
-          <div className="col-12">
-            <Alert variant="info" className="text-center">No Orders Found</Alert>
+        {orders.length > 0 ? orders.map(order => (
+          <div className="col-md-4 mb-3" key={order.id}>
+            <Card>
+              <Card.Body>
+                <Card.Title>Order ID: {order.id}</Card.Title>
+                <Card.Subtitle className="mb-2 text-muted">
+                  <strong style={{
+                    color: order.status === 0 ? "#39f" :
+                      order.status === 1 ? "green" :
+                        order.status === 2 ? "red" :
+                          order.status === 3 ? "#00008B" : "#123456"
+                  }}>
+                    Status: {order.status === 0 ? "Pending" :
+                      order.status === 1 ? "Accepted" :
+                        order.status === 2 ? "Cancelled" :
+                          order.status === 3 ? "Completed" : "Unknown"}
+                  </strong>
+                </Card.Subtitle>
+                {usersss.map(rr => (
+                  <Card.Text key={rr.id}><strong>Worker Name:</strong> {rr.firstname}</Card.Text>
+                ))}
+                <Card.Text><strong>Service Name:</strong> {serviceMap[order.service_id] || "Unknown"}</Card.Text>
+                <Card.Text><strong>Created At:</strong> {new Date(order.createdAt).toLocaleString()}</Card.Text>
+                <div className="d-flex justify-content-between">
+                  {(order.status === 0 || order.status === 1) &&
+                    <Button variant="primary" onClick={() => handleShowEditModal(order)}>Edit</Button>}
+                  <Button variant="info" onClick={() => handleShowChatModal(order.id)}>Chat</Button>
+                  {order.status === 3 && order.paymentstatus == 0 &&
+                    <Button variant="warning" onClick={() => onClickModal(order)}>Payment Order</Button>}
+                  {order.paymentstatus == 1 &&
+                    <>
+                      <Button variant="dark" onClick={() => alert(order.id)}>View Bill</Button>
+                      <Button variant='outline-primary' onClick={() => reviewHandle(order)}>Review</Button>
+                    </>}
+                </div>
+              </Card.Body>
+            </Card>
           </div>
+        )) : (
+          <div className="col-12"><Alert variant="info" className="text-center">No Orders Found</Alert></div>
         )}
       </div>
 
+      {showReviewModal &&
+        <Form onSubmit={sendReview}>
+          <Form.Control type="text" name="points" placeholder="Enter points" value={reviewPost.points} onChange={onChangeReviewHandler} />
+          <Form.Control type="text" name="comment" placeholder="Enter Comment" value={reviewPost.comment} onChange={onChangeReviewHandler} />
+          <Button type="submit" variant="outline-primary">Review</Button>
+        </Form>}
+
+      <Modal show={showEditModal} onHide={() => setShowEditModal(false)} centered>
+        <Modal.Header closeButton><Modal.Title>Edit Order</Modal.Title></Modal.Header>
+        <Modal.Body>
+          <Form onSubmit={onUpdateOrder}>
+            <Form.Group controlId="formOrderStatus">
+              <Form.Label>Status</Form.Label>
+              <Form.Control as="select" name="status" value={orderStatus.status} onChange={(e) => setOrderStatus({ ...orderStatus, status: e.target.value })}>
+                <option value="2">Cancelled</option>
+              </Form.Control>
+            </Form.Group>
+            <Button variant="primary" type="submit">Update</Button>
+          </Form>
+        </Modal.Body>
+      </Modal>
+
       <Modal show={showChatModal} onHide={() => setShowChatModal(false)} size="lg" centered>
-        <Modal.Header closeButton>
-          <Modal.Title>Chat</Modal.Title>
-        </Modal.Header>
+        <Modal.Header closeButton><Modal.Title>Chat</Modal.Title></Modal.Header>
         <Modal.Body>
           {loading ? (
-            <div className="text-center">
-              <Spinner animation="border" variant="primary" />
-              <p>Loading messages...</p>
-            </div>
+            <div className="text-center"><Spinner animation="border" variant="primary" /><p>Loading messages...</p></div>
           ) : (
-            <>
-              {error && <Alert variant="danger">{error}</Alert>}
-              <ul className="list-unstyled">
-                {messages.length > 0 ? (
-                  messages.map((message) => (
-                    <li key={message.id} className="media mb-3">
-                      <img src="https://via.placeholder.com/50" className="mr-3 rounded-circle" alt="User Avatar" />
-                      <div className="media-body">
-                        <h6 className="mt-0 mb-1"><strong>{userMap[message.userID] || "Unknown"}:</strong> {message.message}</h6>
-                        <small className="text-muted">{new Date(message.createdAt).toLocaleString()}</small>
-                      </div>
-                    </li>
-                  ))
-                ) : (
-                  <p className="text-center">No messages found</p>
-                )}
-              </ul>
-            </>
+            <ul className="list-unstyled">
+              {messages.length > 0 ? messages.map(msg => (
+                <li key={msg.id} className="media mb-3">
+                  <img src="https://via.placeholder.com/50" className="mr-3 rounded-circle" alt="User Avatar" />
+                  <div className="media-body">
+                    <h6 className="mt-0 mb-1"><strong>{msg.senderName}</strong>: {msg.message}</h6>
+                    <small className="text-muted">{new Date(msg.createdAt).toLocaleString()}</small>
+                  </div>
+                </li>
+              )) : <p className="text-center">No messages found</p>}
+            </ul>
           )}
         </Modal.Body>
         <Modal.Footer>
-          <Form onSubmit={sendMessage} className="w-100">
-            <Form.Group className="mb-0">
-              <Form.Control
-                type="text"
-                placeholder="Type your message here..."
-                value={normalMessage}
-                onChange={(e) => setNormalMessage(e.target.value)}
-              />
-            </Form.Group>
-            <Button variant="primary" type="submit" className="ml-2">Send</Button>
+          <Form onSubmit={sendMessage} className="w-100 d-flex">
+            <Form.Control type="text" placeholder="Type your message..." value={normalMessage} onChange={(e) => setNormalMessage(e.target.value)} />
+            <Button type="submit" variant="primary" className="ml-2">Send</Button>
           </Form>
         </Modal.Footer>
+      </Modal>
+
+      <Modal show={paymentModal} onHide={() => setPaymentModal(false)} centered>
+        <Modal.Header closeButton><Modal.Title>Payment Details</Modal.Title></Modal.Header>
+        <Modal.Body>
+          <Form onSubmit={onSubmitPayment}>
+            {["cardName", "cardNumber", "expMonth", "expYear", "paymentAmount", "paymentAddress", "paymentCity", "paymentState", "paymentPostalcode"].map(field => (
+              <Form.Group key={field}>
+                <Form.Label>{field}</Form.Label>
+                <Form.Control name={field} type="text" value={paymentData[field]} placeholder={`Enter ${field}`} onChange={submitPaymentHandler} />
+              </Form.Group>
+            ))}
+            <Button variant="primary" type="submit">Submit</Button>
+          </Form>
+        </Modal.Body>
       </Modal>
     </div>
   );

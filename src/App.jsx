@@ -9,6 +9,7 @@ import Homepage from './components/userpages/Homepage'
 import Profile from './components/userpages/Profile'
 import GetSubDetails from './components/userpages/GetSubDetails'
 import Workerorder from './components/workerpages/Workerorder'
+import Adminpage from './components/userpages/Adminpage'
 function App() {
   return (
     <>
@@ -23,6 +24,8 @@ function App() {
             <Route exact path="/profile" element={<Profile/>}/>
             <Route exact path="/getallSub" element={<GetSubDetails/>}/>
             <Route exact path="/worker" element={<Workerorder/>}/>
+            <Route exact path="/admin" element={<Adminpage/>}/>
+            
           </Routes>
         </Router>
     </>

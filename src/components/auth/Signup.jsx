@@ -1,6 +1,9 @@
 import { useState } from "react";
 import axios from "axios";
+import '../../assets/css/landing.css';
 import { useNavigate } from "react-router-dom";
+import { FaUser, FaEnvelope, FaPhone, FaLock, FaArrowRight } from "react-icons/fa";
+import { FiLoader } from "react-icons/fi";
 
 function Signup() {
     const [data, setData] = useState({
@@ -54,61 +57,162 @@ function Signup() {
                 setTimeout(() => navigate('/login'), 2000);
             }
         } catch (error) {
-            setError(error.response?.data?.message || 'An error occurred');
+            setError(error.response?.data?.message || 'An error occurred during signup');
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <section className="formConcepts">
-            <div className="formBox">
-                <form onSubmit={handleSubmit}>
-                    {loading && <p style={{ backgroundColor: 'black', color: 'white', fontWeight: 'bold' }}>Loading...</p>}
-                    {passwordErr && <p style={{ color: 'red', fontWeight: 'bold', backgroundColor: 'black' }}>{passwordErr}</p>}
-                    {error && <p style={{ color: 'red', fontWeight: 'bold', backgroundColor: 'black' }}>{error}</p>}
-                    {success && <p style={{ backgroundColor: 'black', color: 'green', fontWeight: 'bold' }}>{success}</p>}
-                    
-                    <h1>Sign up</h1>
-                    
-                    <div className="inputDetails">
-                        <input type="text" name="firstname" value={data.firstname} onChange={handleChange} required />
-                        <label htmlFor="firstname">Enter First name</label>
-                    </div>
-                    <div className="inputDetails">
-                        <input type="text" name="lastname" value={data.lastname} onChange={handleChange} required />
-                        <label htmlFor="lastname">Enter Last name</label>
-                    </div>
-                    <div className="inputDetails">
-                        <input type="email" name="email" value={data.email} onChange={handleChange} required />
-                        <label htmlFor="email">Enter your email</label>
-                    </div>
-                    <div className="inputDetails">
-                        <input type="tel" name="phonenumber" value={data.phonenumber} onChange={handleChange} required />
-                        <label htmlFor="phonenumber">Enter phone number</label>
-                    </div>
-                    <div className="inputDetails">
-                        <input type="password" name="password" value={data.password} onChange={handleChange} required />
-                        <label htmlFor="password">Enter password</label>
-                    </div>
-                    <div className="inputDetails">
-                        <input type="password" name="c_password" value={data.c_password} onChange={handleChange} required />
-                        <label htmlFor="c_password">Confirm password</label>
-                    </div>
-                    
-                    <div className="Signupbtns">
-                        {!loading ? (
-                            <button className="srvcbtn" type="submit">Signup</button>
-                        ) : (
-                            <p>Loading...</p>
-                        )}
+        <section className="auth-container">
+            <div className="auth-card">
+                <div className="auth-header">
+                    <h1>Create Account</h1>
+                    <p>Join Service Harbour to access amazing services</p>
+                </div>
+
+                <form onSubmit={handleSubmit} className="auth-form">
+                    {loading && (
+                        <div className="auth-alert loading">
+                            <FiLoader className="spin" /> Processing your request...
+                        </div>
+                    )}
+                    {error && (
+                        <div className="auth-alert error">
+                            {error}
+                        </div>
+                    )}
+                    {success && (
+                        <div className="auth-alert success">
+                            {success}
+                        </div>
+                    )}
+                    {passwordErr && (
+                        <div className="auth-alert error">
+                            {passwordErr}
+                        </div>
+                    )}
+
+                    <div className="form-grid">
+                        <div className="input-group">
+                            <label htmlFor="firstname">First Name</label>
+                            <div className="input-field">
+                                <FaUser className="input-icon" />
+                                <input
+                                    type="text"
+                                    id="firstname"
+                                    name="firstname"
+                                    value={data.firstname}
+                                    onChange={handleChange}
+                                    placeholder="John"
+                                    required
+                                />
+                            </div>
+                        </div>
+
+                        <div className="input-group">
+                            <label htmlFor="lastname">Last Name</label>
+                            <div className="input-field">
+                                <FaUser className="input-icon" />
+                                <input
+                                    type="text"
+                                    id="lastname"
+                                    name="lastname"
+                                    value={data.lastname}
+                                    onChange={handleChange}
+                                    placeholder="Doe"
+                                    required
+                                />
+                            </div>
+                        </div>
                     </div>
 
-                    <div className="otherlinks">
-                        <span>Already a member?&nbsp;&nbsp;<a href="/login">Login</a></span><br />
-                        <span>Go to &nbsp;&nbsp;<a href="/">Homepage</a></span>
+                    <div className="input-group">
+                        <label htmlFor="email">Email Address</label>
+                        <div className="input-field">
+                            <FaEnvelope className="input-icon" />
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                value={data.email}
+                                onChange={handleChange}
+                                placeholder="john@example.com"
+                                required
+                            />
+                        </div>
                     </div>
+
+                    <div className="input-group">
+                        <label htmlFor="phonenumber">Phone Number</label>
+                        <div className="input-field">
+                            <FaPhone className="input-icon" />
+                            <input
+                                type="tel"
+                                id="phonenumber"
+                                name="phonenumber"
+                                value={data.phonenumber}
+                                onChange={handleChange}
+                                placeholder="+1 234 567 8900"
+                                required
+                            />
+                        </div>
+                    </div>
+
+                    <div className="input-group">
+                        <label htmlFor="password">Password (min 10 characters)</label>
+                        <div className="input-field">
+                            <FaLock className="input-icon" />
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                value={data.password}
+                                onChange={handleChange}
+                                placeholder="••••••••••"
+                                required
+                                minLength="10"
+                            />
+                        </div>
+                    </div>
+
+                    <div className="input-group">
+                        <label htmlFor="c_password">Confirm Password</label>
+                        <div className="input-field">
+                            <FaLock className="input-icon" />
+                            <input
+                                type="password"
+                                id="c_password"
+                                name="c_password"
+                                value={data.c_password}
+                                onChange={handleChange}
+                                placeholder="••••••••••"
+                                required
+                                minLength="10"
+                            />
+                        </div>
+                    </div>
+
+                    <button type="submit" className="auth-button" disabled={loading}>
+                        {loading ? (
+                            <FiLoader className="spin" />
+                        ) : (
+                            <>
+                                Sign Up <FaArrowRight />
+                            </>
+                        )}
+                    </button>
                 </form>
+
+                <div className="auth-footer">
+                    <p>
+                        Already have an account?{' '}
+                        <a href="/login" className="auth-link">Log in</a>
+                    </p>
+                    <p>
+                        <a href="/" className="auth-link">Back to Homepage</a>
+                    </p>
+                </div>
             </div>
         </section>
     );

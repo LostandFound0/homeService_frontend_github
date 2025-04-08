@@ -1,179 +1,265 @@
 import React, { useState } from "react";
-import '../../assets/css/main.css'
+import '../../assets/css/landing.css';
 import { useNavigate } from "react-router-dom";
-import mainimage from '../../assets/images/section1img.png'
-import aboutimg from '../../assets/images/aboutus.png'
-import car from '../../assets/images/car.png'
-import cleaning from '../../assets/images/cleaning.png'
-import garden from '../../assets/images/garden.png'
-import hair from '../../assets/images/hair.png'
-import makeup from '../../assets/images/makeup.png'
-import pet from '../../assets/images/pet.png'
-import tutor from '../../assets/images/tutor.png'
-import fitness from '../../assets/images/fitness.png'
-import contactus from '../../assets/images/contactus.png'
-import { FaBarsStaggered } from "react-icons/fa6";
+import mainimage from '../../assets/images/section1img.png';
+import aboutimg from '../../assets/images/aboutus.png';
+import car from '../../assets/images/car.png';
+import cleaning from '../../assets/images/cleaning.png';
+import garden from '../../assets/images/garden.png';
+import hair from '../../assets/images/hair.png';
+import makeup from '../../assets/images/makeup.png';
+import pet from '../../assets/images/pet.png';
+import tutor from '../../assets/images/tutor.png';
+import fitness from '../../assets/images/fitness.png';
+import { FaBars, FaPhone, FaEnvelope, FaMapMarkerAlt, FaClock } from "react-icons/fa";
+import { IoClose } from "react-icons/io5";
 
-export default function Landing(){
-    const navigate=useNavigate()
-    const[openNav,setOpenNav]=useState(false)
-    return(
-        <>
-            <div>
-            <section className="firstSection">
-                <div className="navsection">
-                    <nav>
-                        <div className="Lanlogo">
+export default function Landing() {
+    const navigate = useNavigate();
+    const [openNav, setOpenNav] = useState(false);
+
+    return (
+        <div className="landing-container">
+            <header className="header">
+                <div className="container">
+                    <div className="header-content">
+                        <div className="logo">
                             <h1>Service Harbour</h1>
                         </div>
-                        <ul className={openNav ? "navOpen":""}>
-                            <li><a href="#">Home</a></li>
-                            <li><a href="#About">About us</a></li>
-                            <li><a href="#Service">Service</a></li>
-                            <li><a href="#career">Career</a></li>
-                            <li><a href="#contact">Contact us</a></li>
-                        </ul>
-                        <div className="bars" onClick={()=>{
-                            setOpenNav(!openNav)
-                        }}>
-                            <FaBarsStaggered />
-                        </div>
-                    </nav>
-                </div>
-                <div className="mainContent">
-                    <div className="content">
-                        <h1>Service Harbour</h1>
-                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis perferendis reprehenderit quaerat asperiores recusandae sequi soluta tenetur accusamus delectus, rem eveniet. Nisi architecto commodi iure, sed similique ab dolor ullam eveniet quia expedita repellendus at dolorum sequi! Rem, cum accusantium nulla, eum magni quae, perspiciatis consectetur distinctio tenetur non dolor.</p>
-                        <button onClick={()=>navigate('/signup')} className="srvcbtn">Join now</button>
-                    </div>
-                    <div className="mainImage">
-                        <img src={mainimage} alt="No image" />
+
+                        <nav className={`nav ${openNav ? "open" : ""}`}>
+                            <button className="close-btn" onClick={() => setOpenNav(false)}>
+                                <IoClose />
+                            </button>
+                            <ul>
+                                <li><a href="#" onClick={() => setOpenNav(false)}>Home</a></li>
+                                <li><a href="#about" onClick={() => setOpenNav(false)}>About</a></li>
+                                <li><a href="#services" onClick={() => setOpenNav(false)}>Services</a></li>
+                                <li><a href="#careers" onClick={() => setOpenNav(false)}>Careers</a></li>
+                                <li><a href="#contact" onClick={() => setOpenNav(false)}>Contact</a></li>
+                            </ul>
+                        </nav>
+
+                        <button className="join-btn" onClick={() => navigate('/signup')}>Join Now</button>
+
+                        <button className="menu-btn" onClick={() => setOpenNav(!openNav)}>
+                            <FaBars />
+                        </button>
                     </div>
                 </div>
-            </section>
-            <section className="aboutus" id="About">
-                <div className="aboutcontent">
-                    <div className="aboutusallContent">
-                        <div className="aboutImage">
-                            <img src={aboutimg} alt="no image"/>
-                        </div>
-                        <div className="aboutcontents">
-                            <h1>About us</h1>
-                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ex id quisquam nostrum ut? Excepturi, dicta voluptates? Quibusdam quisquam id vitae, excepturi ab sunt, numquam a tenetur deserunt omnis repudiandae similique iusto, eligendi minima culpa at. Quos animi totam adipisci laboriosam voluptate minima expedita enim laudantium incidunt, explicabo, fugit deleniti, dolorem amet? Quae eligendi laboriosam at autem assumenda libero amet eius quisquam et voluptas. Adipisci sed nulla autem possimus dolores cum harum esse repudiandae debitis modi sint, ratione porro impedit alias sequi suscipit in est maiores natus neque. Reiciendis perferendis tenetur saepe totam, consequatur ipsam ipsum numquam! Iure quis voluptatem numquam ut perferendis voluptates, molestias beatae vero laborum incidunt, non, eligendi porro modi quos autem. Aspernatur exercitationem similique doloribus pariatur! Minima nisi, cupiditate voluptate molestiae possimus, illo, dicta dolores laboriosam voluptas nostrum neque nemo deserunt! Libero similique excepturi illo provident corporis nemo ex est eos! Nesciunt magnam vitae incidunt placeat nostrum.</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-            <section className="servicesSection" id="Service">
-                <div className="serviceContent">
-                    <h1>Services</h1>
-                    <div className="serviceCards">
-                        <div className="card">
-                            <div className="serviceImg">
-                                <img src={tutor} alt="No image" />
-                            </div>
-                            <div className="cardcontent">
-                                <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quaerat aperiam dolorem modi cumque veniam, facere saepe dolor quam! Unde sit repudiandae odio, aliquam delectus dolorem enim! Culpa quos neque tempore!</p>
+            </header>
+
+            <section className="hero">
+                <div className="container">
+                    <div className="hero-content">
+                        <div className="hero-text">
+                            <h1>Your Trusted Service Provider</h1>
+                            <p>Connecting you with top-quality service professionals for all your needs. From home maintenance to personal care, we've got you covered.</p>
+                            <div className="hero-buttons">
+                                <button className="primary-btn" onClick={() => navigate('/signup')}>Get Started</button>
+                                <button className="secondary-btn">Learn More</button>
                             </div>
                         </div>
-                        <div className="card">
-                            <div className="serviceImg">
-                                <img src={car} alt="No image" />
-                            </div>
-                            <div className="cardcontent">
-                                <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quaerat aperiam dolorem modi cumque veniam, facere saepe dolor quam! Unde sit repudiandae odio, aliquam delectus dolorem enim! Culpa quos neque tempore!</p>
-                            </div>
-                        </div>
-                        <div className="card">
-                            <div className="serviceImg">
-                                <img src={pet} alt="No image" />
-                            </div>
-                            <div className="cardcontent">
-                                <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quaerat aperiam dolorem modi cumque veniam, facere saepe dolor quam! Unde sit repudiandae odio, aliquam delectus dolorem enim! Culpa quos neque tempore!</p>
-                            </div>
-                        </div>
-                        <div className="card">
-                            <div className="serviceImg">
-                                <img src={makeup} alt="No image" />
-                            </div>
-                            <div className="cardcontent">
-                                <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quaerat aperiam dolorem modi cumque veniam, facere saepe dolor quam! Unde sit repudiandae odio, aliquam delectus dolorem enim! Culpa quos neque tempore!</p>
-                            </div>
-                        </div>
-                        <div className="card">
-                            <div className="serviceImg">
-                                <img src={garden} alt="No image" />
-                            </div>
-                            <div className="cardcontent">
-                                <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quaerat aperiam dolorem modi cumque veniam, facere saepe dolor quam! Unde sit repudiandae odio, aliquam delectus dolorem enim! Culpa quos neque tempore!</p>
-                            </div>
-                        </div>
-                        <div className="card">
-                            <div className="serviceImg">
-                                <img src={fitness} alt="No image" />
-                            </div>
-                            <div className="cardcontent">
-                                <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quaerat aperiam dolorem modi cumque veniam, facere saepe dolor quam! Unde sit repudiandae odio, aliquam delectus dolorem enim! Culpa quos neque tempore!</p>
-                            </div>
-                        </div>
-                        <div className="card">
-                            <div className="serviceImg">
-                                <img src={cleaning} alt="No image" />
-                            </div>
-                            <div className="cardcontent">
-                                <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quaerat aperiam dolorem modi cumque veniam, facere saepe dolor quam! Unde sit repudiandae odio, aliquam delectus dolorem enim! Culpa quos neque tempore!</p>
-                            </div>
-                        </div>
-                        <div className="card">
-                            <div className="serviceImg">
-                                <img src={hair} alt="No image" />
-                            </div>
-                            <div className="cardcontent">
-                                <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quaerat aperiam dolorem modi cumque veniam, facere saepe dolor quam! Unde sit repudiandae odio, aliquam delectus dolorem enim! Culpa quos neque tempore!</p>
-                            </div>
+                        <div className="hero-image">
+                            <img src={mainimage} alt="Service Harbour" />
                         </div>
                     </div>
                 </div>
             </section>
-            <section className="career" id="career">
-                <h1>Careers</h1>
-            </section>
-            <section className="contactus" id="contact">
-                <div className="contactDetails">
-                    <h1>Contact us</h1>
-                    <div className="contactform">
-                        <div className="contactformDetails">
-                            <div className="contact_title">
-                                <h1>Contact us</h1>
-                                <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ut, blanditiis?</p>
-                            </div>                            
-                            
-                            <h1>Phonenumber:<span>+1 8569740231</span></h1>
+
+            <section className="about" id="about">
+                <div className="container">
+                    <div className="section-header">
+                        <h2>About Us</h2>
+                        <p>Who we are and what we stand for</p>
+                    </div>
+                    <div className="about-content">
+                        <div className="about-image">
+                            <img src={aboutimg} alt="About Service Harbour" />
                         </div>
-                        <div className="conatactfields">
-                            <form action="#">
-                                <div className="form_details">
-                                    <input type="text" name="Fullname" id="" />
-                                    <label htmlFor="Fullname">Full name:</label>
+                        <div className="about-text">
+                            <h3>Our Story</h3>
+                            <p>Service Harbour was founded with a simple mission: to make finding reliable service professionals effortless. We understand the challenges of finding trustworthy help, and we've built a platform that connects you with vetted experts in your area.</p>
+                            <p>Our team is dedicated to ensuring quality service and customer satisfaction. We carefully screen all service providers to maintain high standards across all categories.</p>
+                            <div className="about-stats">
+                                <div className="stat">
+                                    <h4>500+</h4>
+                                    <p>Service Providers</p>
                                 </div>
-                                <div className="form_details">
-                                    <input type="number" name="Phonenumber" id="" />
-                                    <label htmlFor="Phonenumber">Phonenumber:</label>
+                                <div className="stat">
+                                    <h4>10K+</h4>
+                                    <p>Happy Customers</p>
                                 </div>
-                                <div className="form_details">
-                                    <input type="email" name="Email" id="" />
-                                    <label htmlFor="Email">Email:</label>
+                                <div className="stat">
+                                    <h4>24/7</h4>
+                                    <p>Customer Support</p>
                                 </div>
-                                <div className="form_details">
-                                    <textarea type="text" name="Message" id="" />
-                                    <label htmlFor="Message">Message :</label>
-                                </div>
-                            </form>
+                            </div>
                         </div>
                     </div>
                 </div>
             </section>
-            </div>
-        </>
-    )
+
+            <section className="services" id="services">
+                <div className="container">
+                    <div className="section-header">
+                        <h2>Our Services</h2>
+                        <p>Comprehensive solutions for all your needs</p>
+                    </div>
+                    <div className="services-grid">
+                        <div className="service-card">
+                            <div className="service-icon">
+                                <img src={tutor} alt="Tutoring" />
+                            </div>
+                            <h3>Tutoring</h3>
+                            <p>Expert tutors for all subjects and grade levels, available for in-person or online sessions.</p>
+                        </div>
+                        <div className="service-card">
+                            <div className="service-icon">
+                                <img src={car} alt="Auto Services" />
+                            </div>
+                            <h3>Auto Services</h3>
+                            <p>Professional mechanics and detailers to keep your vehicle in top condition.</p>
+                        </div>
+                        <div className="service-card">
+                            <div className="service-icon">
+                                <img src={pet} alt="Pet Care" />
+                            </div>
+                            <h3>Pet Care</h3>
+                            <p>Grooming, walking, sitting, and veterinary services for your furry friends.</p>
+                        </div>
+                        <div className="service-card">
+                            <div className="service-icon">
+                                <img src={makeup} alt="Beauty" />
+                            </div>
+                            <h3>Beauty</h3>
+                            <p>Professional makeup artists, hairstylists, and beauty technicians for any occasion.</p>
+                        </div>
+                        <div className="service-card">
+                            <div className="service-icon">
+                                <img src={garden} alt="Gardening" />
+                            </div>
+                            <h3>Gardening</h3>
+                            <p>Landscaping, lawn care, and gardening services to enhance your outdoor space.</p>
+                        </div>
+                        <div className="service-card">
+                            <div className="service-icon">
+                                <img src={fitness} alt="Fitness" />
+                            </div>
+                            <h3>Fitness</h3>
+                            <p>Personal trainers and fitness instructors to help you achieve your health goals.</p>
+                        </div>
+                        <div className="service-card">
+                            <div className="service-icon">
+                                <img src={cleaning} alt="Cleaning" />
+                            </div>
+                            <h3>Cleaning</h3>
+                            <p>Thorough and reliable cleaning services for homes and offices.</p>
+                        </div>
+                        <div className="service-card">
+                            <div className="service-icon">
+                                <img src={hair} alt="Hair Care" />
+                            </div>
+                            <h3>Hair Care</h3>
+                            <p>Professional stylists for cuts, coloring, treatments, and special occasion styling.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section className="careers" id="careers">
+                <div className="container">
+                    <div className="careers-content">
+                        <div className="careers-text">
+                            <h2>Join Our Team</h2>
+                            <p>We're always looking for talented professionals to join our network of service providers.</p>
+                            <p>At Service Harbour, we value quality, reliability, and excellent customer service. If you're a skilled professional looking to grow your business, we'd love to hear from you.</p>
+                            <button className="primary-btn">View Open Positions</button>
+                        </div>
+                        <div className="careers-benefits">
+                            <h3>Why Join Us?</h3>
+                            <ul>
+                                <li>Access to a large customer base</li>
+                                <li>Flexible scheduling</li>
+                                <li>Competitive earnings</li>
+                                <li>Marketing and promotion support</li>
+                                <li>Easy payment processing</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section className="contact" id="contact">
+                <div className="container">
+                    <div className="section-header">
+                        <h2>Contact Us</h2>
+                        <p>We'd love to hear from you</p>
+                    </div>
+                    <div className="contact-content">
+                        <div className="contact-info">
+                            <div className="info-card">
+                                <div className="info-icon"><FaPhone /></div>
+                                <h3>Phone</h3>
+                                <p>+1 856-974-0231</p>
+                                <p>Mon-Fri: 9am-6pm</p>
+                            </div>
+                            <div className="info-card">
+                                <div className="info-icon"><FaEnvelope /></div>
+                                <h3>Email</h3>
+                                <p>info@serviceharbour.com</p>
+                                <p>support@serviceharbour.com</p>
+                            </div>
+                            <div className="info-card">
+                                <div className="info-icon"><FaMapMarkerAlt /></div>
+                                <h3>Location</h3>
+                                <p>123 Service Street</p>
+                                <p>Harbour City, HC 12345</p>
+                            </div>
+                            <div className="info-card">
+                                <div className="info-icon"><FaClock /></div>
+                                <h3>Hours</h3>
+                                <p>Monday-Friday: 9am-6pm</p>
+                                <p>Saturday: 10am-4pm</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <footer className="footer">
+                <div className="container">
+                    <div className="footer-content">
+                        <div className="footer-logo">
+                            <h2>Service Harbour</h2>
+                            <p>Connecting you with quality service professionals</p>
+                        </div>
+                        <div className="footer-links">
+                            <div className="link-group">
+                                <h3>Company</h3>
+                                <ul>
+                                    <li><a href="#about">About Us</a></li>
+                                    <li><a href="#services">Services</a></li>
+                                    <li><a href="#careers">Careers</a></li>
+                                    <li><a href="#contact">Contact</a></li>
+                                </ul>
+                            </div>
+                            <div className="link-group">
+                                <h3>Support</h3>
+                                <ul>
+                                    <li><a href="#">Help Center</a></li>
+                                    <li><a href="#">Privacy Policy</a></li>
+                                    <li><a href="#">Terms of Service</a></li>
+                                    <li><a href="#">FAQs</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="footer-bottom">
+                        <p>&copy; {new Date().getFullYear()} Service Harbour. All rights reserved.</p>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    );
 }
