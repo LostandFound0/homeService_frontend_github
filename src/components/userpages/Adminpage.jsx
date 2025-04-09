@@ -131,6 +131,7 @@ function Adminpage() {
                             <select name="usertype" value={formData.usertype} onChange={handleInputChange}>
                                 <option value="0">User</option>
                                 <option value="1">Worker</option>
+                                <option value="2">Admin</option>
                             </select>
                         </div>
                         <button type="submit" className="submit-btn">
