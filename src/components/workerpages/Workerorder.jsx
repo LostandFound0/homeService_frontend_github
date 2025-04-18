@@ -206,6 +206,7 @@ function Workerorder() {
               <Form.Group controlId="formOrderStatus">
                 <Form.Label>Status</Form.Label>
                 <Form.Control as="select" name="status" value={mesData.status} onChange={(e) => setMesData({ ...mesData, [e.target.name]: e.target.value })}>
+                  <option>select status</option>
                   <option value="1">Accepted</option>
                   <option value="2">Cancelled</option>
                   <option value="3">Completed</option>

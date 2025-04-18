@@ -255,8 +255,8 @@ function UserOrder() {
                   {(order.status === 0 || order.status === 1) &&
                     <Button variant="primary" onClick={() => handleShowEditModal(order)}>Edit</Button>}
                   <Button variant="info" onClick={() => handleShowChatModal(order.id)}>Chat</Button>
-                  {order.status === 3 && order.paymentstatus == 0 &&
-                    <Button variant="warning" onClick={() => onClickModal(order)}>Payment Order</Button>}
+                  {/* {order.status === 3 && order.paymentstatus == 0 &&
+                    <Button variant="warning" onClick={() => onClickModal(order)}>Payment Order</Button>} */}
                   {order.paymentstatus == 1 &&
                     <>
                       <Button variant="dark" onClick={() => alert(order.id)}>View Bill</Button>
@@ -285,6 +285,7 @@ function UserOrder() {
             <Form.Group controlId="formOrderStatus">
               <Form.Label>Status</Form.Label>
               <Form.Control as="select" name="status" value={orderStatus.status} onChange={(e) => setOrderStatus({ ...orderStatus, status: e.target.value })}>
+                <option>select status</option>
                 <option value="2">Cancelled</option>
               </Form.Control>
             </Form.Group>

@@ -61,15 +61,15 @@ export default function Homepage() {
                                     <MdOutlineSubscriptions /> Subscription
                                 </div>
                         )} */}
-                                <div className={toogle === 6 ? "bars activetabs" : "bars"} onClick={() => { toogleBtn(6) }}>
-                                    <IoSettingsOutline /> Settings
-                                </div>
+                        <div className={toogle === 6 ? "bars activetabs" : "bars"} onClick={() => { toogleBtn(6) }}>
+                            <IoSettingsOutline /> Settings
+                        </div>
                         {usertype == 1 && (
                             <>
                                 <div className={toogle === 4 ? "bars activetabs" : "bars"} onClick={() => { toogleBtn(4) }}>
                                     <FaHistory /> Worker History
                                 </div>
-                                
+
                                 <div className={toogle === 7 ? "bars activetabs" : "bars"} onClick={() => { toogleBtn(7) }}>
                                     <IoSettingsOutline /> Add Service
                                 </div>
@@ -83,12 +83,12 @@ export default function Homepage() {
                         </div>
                     </div>
                     <div className="homepageContent">
-                    {usertype == 0 && (
-  <div className={toogle === 1 ? "homeContents active-content" : "homeContents"}>
-    <h1>Hello Success</h1>
-    <NLPQueryBox />
-  </div>
-)}
+                        {usertype == 0 && (
+                            <div className={toogle === 1 ? "homeContents active-content" : "homeContents"}>
+                                <h1>Hello Success</h1>
+                                <NLPQueryBox />
+                            </div>
+                        )}
 
                         {usertype == 0 && (
                             <div className={toogle === 1 ? "homeContents active-content" : "homeContents"}>
@@ -105,7 +105,7 @@ export default function Homepage() {
                         )}
                         {usertype == 0 && (
                             <div className={toogle === 5 ? "homeContents active-content" : "homeContents"}>
-                                <Subscription/>
+                                <Subscription />
                             </div>
                         )}
                         <div className={toogle === 6 ? "homeContents active-content" : "homeContents"}>

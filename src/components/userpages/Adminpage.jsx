@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import NLPQueryBox from '../auth/NLPQueryBox ';
 import '../../assets/css/admin.css';
+import { useNavigate } from 'react-router-dom';
 
 function Adminpage() {
     const [data, setData] = useState([]);
@@ -77,10 +78,19 @@ function Adminpage() {
         user.email.toLowerCase().includes(search.toLowerCase()) ||
         user.phonenumber.includes(search)
     );
+    const navigate = useNavigate();
 
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        navigate('/login');
+    };
+    
     return (
         <div className="admin-container">
-            <h1 className="admin-title">Admin Dashboard</h1>
+            <div className="admin-header">
+    <h1 className="admin-title">Admin Dashboard</h1>
+    <button className="delete-btn" onClick={handleLogout}>Logout</button>
+</div>
 
             <div className="cards-container">
                 <div className="admin-card">
@@ -100,11 +110,6 @@ function Adminpage() {
                 </div>
             </div>
 
-            {/* ✅ NLP Smart Search Section */}
-            <div className="nlp-box-section" style={{ marginTop: "30px" }}>
-                <h2>Smart Query (NLP Powered)</h2>
-                <NLPQueryBox />
-            </div>
 
             {showForm && (
                 <div className="crud-form" ref={formRef}>
@@ -197,3 +202,4 @@ function Adminpage() {
 }
 
 export default Adminpage;
+    
